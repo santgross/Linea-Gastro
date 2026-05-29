@@ -1,0 +1,6 @@
+{
+  "name": "linea-gastro",
+  "description": "Dashboard de prescripciones mensuales y catálogo de productos para la línea gastro de Pharmabrand S.A.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

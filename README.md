@@ -1,11 +1,25 @@
-<div align="center">
+# Línea Gastro — Pharmabrand S.A.
+Plataforma piloto de inteligencia comercial 
+para la línea de Gastroenterología.
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+## Stack
+- Next.js 15 (App Router)
+- Supabase (PostgreSQL)
+- Recharts
+- Tailwind CSS
+- Deploy: Vercel
 
-  <h1>Built with AI Studio</h2>
+## Variables de entorno requeridas
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Módulos actuales
+- Dashboard de prescripciones (RX mensual/TAM)
+- Market share por producto
+- Distribución geográfica por provincia
+- Análisis competitivo por clase ATC
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
-
-</div>
+## Roadmap
+- Fase 2: Panel de visitas médicas
+- Fase 3: Ventas a farmacias
+- Fase 4: Scoring de médicos
