@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   getProductos, 
   getPrescripciones, 
@@ -40,6 +41,7 @@ interface DashboardPageProps {
 }
 
 export default function DashboardPage({ onNavigateProduct, userEmail }: DashboardPageProps) {
+  const router = useRouter();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [prescripciones, setPrescripciones] = useState<Prescripcion[]>([]);
   const [mercados, setMercados] = useState<MercadoATC[]>([]);
@@ -490,7 +492,7 @@ export default function DashboardPage({ onNavigateProduct, userEmail }: Dashboar
                       return (
                         <tr 
                           key={p.id}
-                          onClick={() => onNavigateProduct ? onNavigateProduct(p.id) : null}
+                          onClick={() => onNavigateProduct ? onNavigateProduct(p.id) : router.push(`/productos/${p.id}`)}
                           className="hover:bg-[#8892b00a] transition-colors duration-150 cursor-pointer"
                         >
                           <td className="py-3.5 px-4 font-mono font-bold text-[#00C9A7]">{p.codigo}</td>

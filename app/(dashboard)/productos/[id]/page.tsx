@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { 
   getProductos, 
   getPrescripciones, 
@@ -30,12 +31,19 @@ import {
   Database
 } from 'lucide-react';
 
-interface ProductDetailPageProps {
-  productId: string;
-  onBack: () => void;
-}
+export default function ProductDetailPage({ productId: propProductId, onBack }: { productId?: string; onBack?: () => void }) {
+  const router = useRouter();
+  const params = useParams();
+  const productId = propProductId || (params?.id as string);
 
-export default function ProductDetailPage({ productId, onBack }: ProductDetailPageProps) {
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      router.push('/dashboard');
+    }
+  };
+
   const [producto, setProducto] = useState<Producto | null>(null);
   const [prescripciones, setPrescripciones] = useState<Prescripcion[]>([]);
   const [mercados, setMercados] = useState<MercadoATC[]>([]);
@@ -101,7 +109,7 @@ export default function ProductDetailPage({ productId, onBack }: ProductDetailPa
         <p className="text-xs text-gray-400 mb-6 font-light">
           La fórmula seleccionada no existe en la base de datos de Pharmabrand S.A.
         </p>
-        <Button onClick={onBack} variant="primary">
+        <Button onClick={handleBack} variant="primary">
           Regresar al Dashboard
         </Button>
       </Card>
@@ -200,7 +208,7 @@ export default function ProductDetailPage({ productId, onBack }: ProductDetailPa
       {/* Back navigation header row */}
       <div className="flex items-center justify-between border-b border-[#8892b01a] pb-4">
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className="flex items-center gap-1 text-xs text-gray-400 hover:text-white font-mono cursor-pointer transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />

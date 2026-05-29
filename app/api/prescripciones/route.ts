@@ -1,33 +1,37 @@
-import { Router, Request, Response } from 'express';
+import { NextResponse } from 'next/server';
 import { getPrescripciones, savePrescripcion } from '../../../lib/supabase';
 
-const router = Router();
-
-// GET: devuelve prescripciones filtradas por periodo, provincia, producto
-router.get('/', async (req: Request, res: Response) => {
+export async function GET(request: Request) {
   try {
-    const { periodo, provincia, producto } = req.query;
+    const { searchParams } = new URL(request.url);
+    const periodo = searchParams.get('periodo');
+    const provincia = searchParams.get('provincia');
+    const producto = searchParams.get('producto');
+
     let data = await getPrescripciones();
 
-    if (periodo && typeof periodo === 'string' && periodo !== 'all') {
+    if (periodo && periodo !== 'all') {
       data = data.filter((p) => p.periodo === periodo);
     }
-    if (provincia && typeof provincia === 'string' && provincia !== 'all') {
+    if (provincia && provincia !== 'all') {
       data = data.filter((p) => p.provincia.toLowerCase() === provincia.toLowerCase());
     }
-    if (producto && typeof producto === 'string' && producto !== 'all') {
+    if (producto && producto !== 'all') {
       data = data.filter((p) => p.producto_id === producto);
     }
 
-    res.json({ success: true, data });
+    return NextResponse.json({ success: true, data });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message || 'Error al obtener prescripciones' });
+    return NextResponse.json(
+      { success: false, error: err.message || 'Error al obtener prescripciones' },
+      { status: 500 }
+    );
   }
-});
+}
 
-// POST: inserta nuevos registros
-router.post('/', async (req: Request, res: Response) => {
+export async function POST(request: Request) {
   try {
+    const body = await request.json();
     const { 
       periodo, 
       laboratorio, 
@@ -40,11 +44,14 @@ router.post('/', async (req: Request, res: Response) => {
       tam_actual, 
       pct_crecimiento, 
       pct_share 
-    } = req.body;
+    } = body;
 
     // Validación básica de campos requeridos
     if (!periodo || !laboratorio || !marca || !provincia || rx_total === undefined) {
-      return res.status(400).json({ success: false, error: 'Faltan campos obligatorios' });
+      return NextResponse.json(
+        { success: false, error: 'Faltan campos obligatorios' },
+        { status: 400 }
+      );
     }
 
     const newPresc = await savePrescripcion({
@@ -61,10 +68,11 @@ router.post('/', async (req: Request, res: Response) => {
       pct_share: pct_share ? Number(pct_share) : 0,
     });
 
-    res.status(201).json({ success: true, data: newPresc });
+    return NextResponse.json({ success: true, data: newPresc }, { status: 201 });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message || 'Error al guardar prescripción' });
+    return NextResponse.json(
+      { success: false, error: err.message || 'Error al guardar prescripción' },
+      { status: 500 }
+    );
   }
-});
-
-export default router;
+}

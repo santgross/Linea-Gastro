@@ -2,16 +2,17 @@
 
 import React, { useState } from 'react';
 import { Pill, ShieldCheck, FileSpreadsheet, Lock, Activity, Eye, EyeOff, Award } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Button from '../components/ui/Button';
 
-export default function LandingPage({ onLoginSuccess }: { onLoginSuccess?: (email: string) => void }) {
+export default function LandingPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('santgross@gmail.com');
   const [password, setPassword] = useState('pharmabrand2026');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Soportar tanto redirección por hash como callback reactivo para el SPA
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -19,11 +20,8 @@ export default function LandingPage({ onLoginSuccess }: { onLoginSuccess?: (emai
 
     setTimeout(() => {
       if (email.trim() && password.length >= 4) {
-        if (onLoginSuccess) {
-          onLoginSuccess(email);
-        } else {
-          window.location.hash = '#/dashboard';
-        }
+        localStorage.setItem('fg_user_email', email);
+        router.push('/dashboard');
       } else {
         setErrorMessage('Credenciales no válidas. Ingrese un email y contraseña realistas.');
       }

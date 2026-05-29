@@ -1,10 +1,7 @@
-import { Router, Request, Response } from 'express';
+import { NextResponse } from 'next/server';
 import { getProductos, getPrescripciones } from '../../../lib/supabase';
 
-const router = Router();
-
-// GET: lista todos los productos activos con sus métricas TAM actual, TAM anterior, % crecimiento, % share
-router.get('/', async (req: Request, res: Response) => {
+export async function GET() {
   try {
     const products = await getProductos();
     const activeProducts = products.filter((p) => p.activo);
@@ -44,10 +41,11 @@ router.get('/', async (req: Request, res: Response) => {
       };
     });
 
-    res.json({ success: true, data });
+    return NextResponse.json({ success: true, data });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message || 'Error al obtener productos' });
+    return NextResponse.json(
+      { success: false, error: err.message || 'Error al obtener productos' },
+      { status: 500 }
+    );
   }
-});
-
-export default router;
+}
